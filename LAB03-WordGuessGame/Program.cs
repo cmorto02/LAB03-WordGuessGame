@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace LAB03_WordGuessGame
 {
@@ -11,33 +13,41 @@ namespace LAB03_WordGuessGame
         }
         static void TitlePage()
         {
-            Console.WriteLine("Lets play the word game!");
-            Console.WriteLine(" ");
-            Console.WriteLine(" ");
-            Console.WriteLine("----------");
-            Console.WriteLine("1. New game");
-            Console.WriteLine("2. Admin");
-            Console.WriteLine("3. Exit");
-            Console.WriteLine("----------");
-            Console.WriteLine("Please make a selection");
-            string selection = Console.ReadLine();
-            int option = Convert.ToInt32(selection);
-            switch (option)
+            try
             {
-                case 1:
-                    NewGame();
-                    break;
-                case 2:
-                    Admin();
-                    break;
-                case 3:
-                    Console.WriteLine("Thank you for playing Word Game!");
-                    break;
-                default:
-                    Console.Clear();
-                    Console.WriteLine("I didnt understand your input, please make a selection.");
-                    TitlePage();
-                    break;
+                Console.WriteLine("Lets play the word game!");
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
+                Console.WriteLine("----------");
+                Console.WriteLine("1. New game");
+                Console.WriteLine("2. Admin");
+                Console.WriteLine("3. Exit");
+                Console.WriteLine("----------");
+                Console.WriteLine("Please make a selection");
+                string selection = Console.ReadLine();
+                int option = Convert.ToInt32(selection);
+                switch (option)
+                {
+                    case 1:
+                        NewGame();
+                        break;
+                    case 2:
+                        Admin();
+                        break;
+                    case 3:
+                        Console.WriteLine("Thank you for playing Word Game!");
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("I didnt understand your input, please make a selection.");
+                        TitlePage();
+                        break;
+                }
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
             }
         }
         static void NewGame()
@@ -45,11 +55,15 @@ namespace LAB03_WordGuessGame
             RemoveAllGuesses();
             string[] wordList = ReadFromList();
             string randomWord = ChooseAWord(wordList);
-            PlayGame(randomWord);
+            GameSetup(randomWord);
         }
         static void RemoveAllGuesses()
         {
-            Console.WriteLine("remove");
+            string path = "../../../Guesses.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine();
+            }
         }
         static string[] ReadFromList()
         {
@@ -61,69 +75,187 @@ namespace LAB03_WordGuessGame
                 return words;
             }
         }
-        static string ChooseAWord(string[] wordlist)
+        static string ChooseAWord(string[] wordList)
         {
-            string randomWord = wordlist[0];
-            return randomWord;
+            Random rnd = new Random();
+            int wordIndex = rnd.Next(wordList.Length);
+            string randomWord = wordList[wordIndex];
+            string upperRandomWord = randomWord.ToUpper(new CultureInfo("en-US", false));
+            return upperRandomWord;
         }
-        static void PlayGame(string randomWord)
+        static void GameSetup(string randomWord)
         {
-            Console.WriteLine(randomWord);
+            Console.Clear();
+            Console.WriteLine("Lets Play!");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            char[] letterArray = randomWord.ToCharArray();
+            char[] blankArray = new char[letterArray.Length];
+            for (int i = 0; i < blankArray.Length; i++)
+            {
+                char blank = Convert.ToChar("_");
+                blankArray[i] = blank;
+            }
+            Console.WriteLine($"Your Word is {blankArray.Length} letters long.");
+            YourWord(letterArray, blankArray);
+        }
+        static void YourWord(char[] letterArray, char[] blankArray)
+        {
+            Console.WriteLine("[{0}]", string.Join(" ", blankArray));
+            char guess = YourGuesses();
+            bool truth = letterArray.Contains(guess);
+            if (truth)
+            {
+                for (int i = 0; i < letterArray.Length; i++)
+                {
+                    if (letterArray[i] == guess)
+                    {
+                        blankArray[i] = guess;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Your word did not include {guess}, please try again.");
+            }
+            YourWord(letterArray, blankArray);
+            if (winCheck(blankArray))
+            {
+                RemoveAllGuesses();
+                Console.WriteLine("You WON!!!");
+            }
+        }
+        static bool winCheck(char[] blankArray)
+        {
+            char blank = '_';
+            for (int i = 0; i < blankArray.Length; i++)
+            {
+                if (blankArray[i] == blank)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        static char YourGuesses()
+        {
+            try
+            {
+                Console.WriteLine("Please guess a letter.");
+                string guess = Console.ReadLine();
+                string upperGuess = guess.ToUpper(new CultureInfo("en-US", false));
+                char charGuess = Convert.ToChar(upperGuess);
+                char vettedGuess = AddALetter(charGuess);
+                return charGuess;
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+        static char[] ReadFromLetterList()
+        {
+            string path = "../../../guesses.txt";
+
+            using (StreamReader sr = File.OpenText(path))
+            {
+                string[] stringLetters = File.ReadAllLines(path);
+                string wordOfLetters = string.Join("", stringLetters);
+                char[] letterArray = wordOfLetters.ToCharArray();
+                return letterArray;
+            }
+        }
+        static char AddALetter(char letter)
+        {
+            bool truth = IsTheLetterThere(letter);
+
+            if (truth == false)
+            {
+                string path = "../../../Guesses.txt";
+
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(letter);
+                }
+                return letter;
+            }
+            string thisOne = "%";
+            char notInAWord = Convert.ToChar(thisOne);
+            return notInAWord;
+        }
+        static bool IsTheLetterThere(char letter)
+        {
+            bool isIt = false;
+            char[] list = ReadFromLetterList();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (list[i] == letter)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("You have already guessed this letter.");
+                    Console.WriteLine("");
+                    isIt = true;
+                    return isIt;
+                }
+            }
+            return isIt;
         }
         static void Admin()
         {
-
-            Console.WriteLine("Admin Menu");
-            Console.WriteLine(" ");
-            Console.WriteLine(" ");
-            Console.WriteLine("----------");
-            Console.WriteLine("1. View Words");
-            Console.WriteLine("2. Add A Word");
-            Console.WriteLine("3. Remove A Word");
-            Console.WriteLine("4. Delete the list");
-            Console.WriteLine("5. Return To The Previous Menu");
-            Console.WriteLine("----------");
-            Console.WriteLine("Please make a selection");
-            string selection = Console.ReadLine();
-            int option = Convert.ToInt32(selection);
-            switch (option)
+            try
             {
-                case 1:
-                    ViewWordList();
-                    break;
-                case 2:
-                    Console.WriteLine("What word would you like to add?");
-                    string addWord = Console.ReadLine();
-                    AddAWord(addWord);
-                    break;
-                case 3:
-                    Console.WriteLine("Here are the current words in the list.");
-                    string path = "../../../Words.txt";
-
-                    using (StreamReader sr = File.OpenText(path))
-                    {
-                        string[] words = File.ReadAllLines(path);
-                        for (int i = 0; i < words.Length; i++)
-                        {
-                            Console.WriteLine(words[i]);
-                        }
-                    }
-                    Console.WriteLine("Which word would you like to remove?");
-                    string removeWord = Console.ReadLine();
-                    RemoveAWord(removeWord);
-                    break;
-                case 4:
-                    Delete();
-                    break;
-                case 5:
-                    Console.Clear();
-                    TitlePage();
-                    break;
-                default:
-                    Console.Clear();
-                    Console.WriteLine("I didnt understand your input, please make a selection.");
-                    Admin();
-                    break;
+                Console.WriteLine("Admin Menu");
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
+                Console.WriteLine("----------");
+                Console.WriteLine("1. View Words");
+                Console.WriteLine("2. Add A Word");
+                Console.WriteLine("3. Remove A Word");
+                Console.WriteLine("4. Delete the list");
+                Console.WriteLine("5. Return To The Previous Menu");
+                Console.WriteLine("----------");
+                Console.WriteLine("Please make a selection");
+                string selection = Console.ReadLine();
+                int option = Convert.ToInt32(selection);
+                switch (option)
+                {
+                    case 1:
+                        ViewWordList();
+                        break;
+                    case 2:
+                        Console.WriteLine("What word would you like to add?");
+                        string addWord = Console.ReadLine();
+                        AddAWord(addWord);
+                        break;
+                    case 3:
+                        Console.WriteLine("Here are the current words in the list.");
+                        PrintNumberedArray();
+                        Console.WriteLine("Which word would you like to remove?");
+                        string removeWord = Console.ReadLine();
+                        int whichWord = Convert.ToInt32(removeWord);
+                        RemoveAWord(whichWord) ;
+                        break;
+                    case 4:
+                        Delete();
+                        break;
+                    case 5:
+                        Console.Clear();
+                        TitlePage();
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("I didnt understand your input, please make a selection.");
+                        Admin();
+                        break;
+                }
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
             }
         }
         static void ViewWordList()
@@ -174,9 +306,10 @@ namespace LAB03_WordGuessGame
             }
             return isIt;
         }
-        static void RemoveAWord(string word)
+        static void RemoveAWord(int selected)
         {
             string[] list = ReadFromList();
+            string word = list[selected-1];
             string[] newList = new string[list.Length - 1];
             int j = 0;
             for (int i = 0; i < list.Length; i++)
@@ -208,6 +341,25 @@ namespace LAB03_WordGuessGame
             }
             Console.Clear();
             Admin();
+        }
+        static void PrintNumberedArray()
+        {
+            string path = "../../../Words.txt";
+
+            using (StreamReader sr = File.OpenText(path))
+            {
+                string[] words = File.ReadAllLines(path);
+                string[] numbers = new string[words.Length];
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    numbers[i] = (Convert.ToString(i+1)+ ". ");
+                }
+                for (int i = 0; i < words.Length; i++)
+                {
+                    Console.Write(numbers[i]);
+                    Console.WriteLine(words[i]);
+                }
+            }
         }
     }
 }
