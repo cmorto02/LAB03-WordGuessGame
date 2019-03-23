@@ -80,7 +80,8 @@ namespace LAB03_WordGuessGame
             Console.WriteLine("1. View Words");
             Console.WriteLine("2. Add A Word");
             Console.WriteLine("3. Remove A Word");
-            Console.WriteLine("4. Return To The Previous Menu");
+            Console.WriteLine("4. Delete the list");
+            Console.WriteLine("5. Return To The Previous Menu");
             Console.WriteLine("----------");
             Console.WriteLine("Please make a selection");
             string selection = Console.ReadLine();
@@ -97,12 +98,24 @@ namespace LAB03_WordGuessGame
                     break;
                 case 3:
                     Console.WriteLine("Here are the current words in the list.");
-                    ViewWordList();
+                    string path = "../../../Words.txt";
+
+                    using (StreamReader sr = File.OpenText(path))
+                    {
+                        string[] words = File.ReadAllLines(path);
+                        for (int i = 0; i < words.Length; i++)
+                        {
+                            Console.WriteLine(words[i]);
+                        }
+                    }
                     Console.WriteLine("Which word would you like to remove?");
                     string removeWord = Console.ReadLine();
                     RemoveAWord(removeWord);
                     break;
                 case 4:
+                    Delete();
+                    break;
+                case 5:
                     Console.Clear();
                     TitlePage();
                     break;
@@ -125,15 +138,41 @@ namespace LAB03_WordGuessGame
                     Console.WriteLine(words[i]);
                 }
             }
+            Admin();
         }
         static void AddAWord(string word)
         {
-            string path = "../../../Words.txt";
-
-            using (StreamWriter sw = File.AppendText(path)) 
+            var truth = IsItThere(word);
+            
+            if (truth == false)
             {
-                sw.WriteLine(word);
+                string path = "../../../Words.txt";
+
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(word);
+                }
+
             }
+            Admin();
+        }
+        static bool IsItThere(string word)
+        {
+            bool isIt = false;
+            string[] list = ReadFromList();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (list[i] == word)
+                {
+                    Console.Clear();
+                    Console.WriteLine("");
+                    Console.WriteLine("The list already contains this word.");
+                    Console.WriteLine("");
+                    isIt = true;
+                    return isIt;
+                }
+            }
+            return isIt;
         }
         static void RemoveAWord(string word)
         {
@@ -157,7 +196,18 @@ namespace LAB03_WordGuessGame
                     sw.WriteLine(addWord);
                 }
             }
-            
+            Console.Clear();
+            Admin();
+        }
+        static void Delete()
+        {
+            string path = "../../../Words.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                    sw.WriteLine();
+            }
+            Console.Clear();
+            Admin();
         }
     }
 }
