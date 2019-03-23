@@ -120,11 +120,16 @@ namespace LAB03_WordGuessGame
             {
                 Console.WriteLine($"Your word did not include {guess}, please try again.");
             }
-            YourWord(letterArray, blankArray);
             if (winCheck(blankArray))
             {
                 RemoveAllGuesses();
+                Console.WriteLine(blankArray);
                 Console.WriteLine("You WON!!!");
+                TitlePage();
+            }
+            else
+            {
+                YourWord(letterArray, blankArray);
             }
         }
         static bool winCheck(char[] blankArray)
