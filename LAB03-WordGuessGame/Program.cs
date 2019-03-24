@@ -46,8 +46,9 @@ namespace LAB03_WordGuessGame
             }
             catch (FormatException e)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                Console.Clear();
+                Console.WriteLine("Im sorry, we did not understand your selection. Please try again.");
+                TitlePage();
             }
         }
         static void NewGame()
@@ -104,9 +105,8 @@ namespace LAB03_WordGuessGame
         static void YourWord(char[] letterArray, char[] blankArray)
         {
             Console.WriteLine("[{0}]", string.Join(" ", blankArray));
-            char guess = YourGuesses();
-            bool truth = letterArray.Contains(guess);
-            if (truth)
+            char guess = YourGuesses(letterArray, blankArray);
+            if (letterArray.Contains(guess))
             {
                 for (int i = 0; i < letterArray.Length; i++)
                 {
@@ -120,11 +120,15 @@ namespace LAB03_WordGuessGame
             {
                 Console.WriteLine($"Your word did not include {guess}, please try again.");
             }
-            if (winCheck(blankArray))
+            if (WinCheck(blankArray))
             {
                 RemoveAllGuesses();
                 Console.WriteLine(blankArray);
+                Console.WriteLine("");
                 Console.WriteLine("You WON!!!");
+                Console.WriteLine("");
+                Console.WriteLine("");
+                Console.WriteLine("");
                 TitlePage();
             }
             else
@@ -132,7 +136,7 @@ namespace LAB03_WordGuessGame
                 YourWord(letterArray, blankArray);
             }
         }
-        static bool winCheck(char[] blankArray)
+        static bool WinCheck(char[] blankArray)
         {
             char blank = '_';
             for (int i = 0; i < blankArray.Length; i++)
@@ -144,7 +148,7 @@ namespace LAB03_WordGuessGame
             }
             return true;
         }
-        static char YourGuesses()
+        static char YourGuesses(char[] letterArray, char[] blankArray)
         {
             try
             {
@@ -157,8 +161,11 @@ namespace LAB03_WordGuessGame
             }
             catch (FormatException e)
             {
-                Console.WriteLine(e.Message);
-                throw;
+                Console.WriteLine("Please try again, your guess must be one character long.");
+                YourWord(letterArray, blankArray);
+                string thisOne = "%";
+                char notInAWord = Convert.ToChar(thisOne);
+                return notInAWord;
             }
         }
         static char[] ReadFromLetterList()
@@ -212,6 +219,7 @@ namespace LAB03_WordGuessGame
         {
             try
             {
+                Console.Clear();
                 Console.WriteLine("Admin Menu");
                 Console.WriteLine(" ");
                 Console.WriteLine(" ");
@@ -228,14 +236,17 @@ namespace LAB03_WordGuessGame
                 switch (option)
                 {
                     case 1:
-                        ViewWordList();
+                        Console.Clear();
+                        PrintNumberedArray();
                         break;
                     case 2:
+                        Console.Clear();
                         Console.WriteLine("What word would you like to add?");
                         string addWord = Console.ReadLine();
                         AddAWord(addWord);
                         break;
                     case 3:
+                        Console.Clear();
                         Console.WriteLine("Here are the current words in the list.");
                         PrintNumberedArray();
                         Console.WriteLine("Which word would you like to remove?");
@@ -244,6 +255,7 @@ namespace LAB03_WordGuessGame
                         RemoveAWord(whichWord) ;
                         break;
                     case 4:
+                        Console.Clear();
                         Delete();
                         break;
                     case 5:
@@ -342,7 +354,7 @@ namespace LAB03_WordGuessGame
             string path = "../../../Words.txt";
             using (StreamWriter sw = new StreamWriter(path))
             {
-                    sw.WriteLine();
+                    sw.WriteLine("Always");
             }
             Console.Clear();
             Admin();

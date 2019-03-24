@@ -6,4 +6,5 @@ Trinket
 Plumber
 Pickles
 Bilatarian
-Plenarian
+freeze
+pink
