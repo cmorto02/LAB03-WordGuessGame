@@ -26,13 +26,13 @@ Then select and open LAB04-WordGuessGame.sln
 ### Visuals
 
 Application Start
-![alt text](https://github.com/cmorto02/lab01-numbersgame/blob/master/lab01-numbersgame/Assets/numbersgame%20start.JPG)
+![alt text](https://github.com/cmorto02/LAB03-WordGuessGame/blob/master/LAB03-WordGuessGame/images/wordgame%20start.JPG)
 
 Using the Application
-![alt text](https://github.com/cmorto02/lab01-numbersgame/blob/master/lab01-numbersgame/Assets/numbersgame%20during.JPG)
+![alt text](https://github.com/cmorto02/LAB03-WordGuessGame/blob/master/LAB03-WordGuessGame/images/wordgame%20during.JPG)
 
 Application End
-![alt text](https://github.com/cmorto02/lab01-numbersgame/blob/master/lab01-numbersgame/Assets/numbersgame%20complete.JPG)
+![alt text](https://github.com/cmorto02/LAB03-WordGuessGame/blob/master/LAB03-WordGuessGame/images/wordgame%20complete.JPG)
 
 ### Change Log
 
