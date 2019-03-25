@@ -36,6 +36,7 @@ namespace LAB03_WordGuessGame
                         NewGame(path);
                         break;
                     case 2:
+                        Console.Clear();
                         Admin();
                         break;
                     case 3:
@@ -306,7 +307,6 @@ namespace LAB03_WordGuessGame
         {
             try
             {
-                Console.Clear();
                 Console.WriteLine("Admin Menu");
                 Console.WriteLine(" ");
                 Console.WriteLine(" ");
@@ -324,20 +324,21 @@ namespace LAB03_WordGuessGame
                 {
                     case 1:
                         Console.Clear();
-                        PrintNumberedArray();
+                        string path = "../../../Words.txt";
+                        ViewWordList(path);
                         break;
                     case 2:
                         Console.Clear();
                         Console.WriteLine("What word would you like to add?");
                         string addWord = Console.ReadLine();
-                        string path = "../../../Words.txt";
+                        path = "../../../Words.txt";
                         AddAWord(addWord, path);
                         break;
                     case 3:
                         Console.Clear();
                         Console.WriteLine("Here are the current words in the list.");
                         PrintNumberedArray();
-                        Console.WriteLine("Which word would you like to remove?");
+                        Console.WriteLine("Please select the number of the word you would like to remove?");
                         string removeWord = Console.ReadLine();
                         int whichWord = Convert.ToInt32(removeWord);
                         RemoveAWord(whichWord) ;
@@ -372,8 +373,14 @@ namespace LAB03_WordGuessGame
             using (StreamReader sr = File.OpenText(path))
             {
                 string[] words = File.ReadAllLines(path);
+                string[] numbers = new string[words.Length];
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    numbers[i] = (Convert.ToString(i + 1) + ". ");
+                }
                 for (int i = 0; i < words.Length; i++)
                 {
+                    Console.Write(numbers[i]);
                     Console.WriteLine(words[i]);
                 }
             }
