@@ -34,6 +34,7 @@ namespace LAB03_WordGuessGame
                     case 1:
                         string path = "../../../Words.txt";
                         NewGame(path);
+                        TitlePage();
                         break;
                     case 2:
                         Console.Clear();
@@ -180,7 +181,6 @@ namespace LAB03_WordGuessGame
                     Console.WriteLine("");
                     Console.WriteLine("");
                     Console.WriteLine("");
-                    TitlePage();
                 }
                 else
                 {
@@ -333,6 +333,7 @@ namespace LAB03_WordGuessGame
                         string addWord = Console.ReadLine();
                         path = "../../../Words.txt";
                         AddAWord(addWord, path);
+                        Admin();
                         break;
                     case 3:
                         Console.Clear();
@@ -406,7 +407,6 @@ namespace LAB03_WordGuessGame
             }
 
             truth = IsItThere(word, path);
-            Admin();
             return truth;
         }
         /// <summary>

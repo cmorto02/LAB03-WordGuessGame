@@ -10,12 +10,12 @@ namespace XUnitTestProject1
         public void ICanAddAWord()
         {
             string test = "test";
-            string path = "../LAB03_WordGuessGame/Words.txt";
+            string path = "../../../../LAB03-WordGuessGame/Words.txt";
             bool result = Program.AddAWord(test, path);
 
             Assert.True(result);
         }
-        [Fact]
+    [Fact]
         public void ICanChooseARandomWord()
         {
             string[] mockList = new string[] { "PINK", "PURPLE", "OCTOBER", "RUG" };
@@ -27,8 +27,8 @@ namespace XUnitTestProject1
         [Fact]
         public void MyWordContainsALetter()
         {
-            char[] word = new char[] { 'A', 'P', 'P', 'L', 'E' };
-            char[] blanks = new char[] { '_', '_', '_', '_', '_' };
+            char[] word = new char[] { 'A',};
+            char[] blanks = new char[] { '_'};
             char guess = 'A';
 
             bool result = Program.YourWord(word, blanks, guess);
