@@ -36,5 +36,8 @@ Application End
 
 ### Change Log
 
+1.0.1
+Added working unit tests and changed some of the wording in the program.
+
 
 For more information on Markdown: https://www.markdownguide.org/cheat-sheet
