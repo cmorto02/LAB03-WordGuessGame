@@ -1,6 +1,6 @@
 # Numbers Game 
 
-## Lab04-WordGuessGame
+## Lab03-WordGuessGame
 
 ### Author: Chris Morton
 
@@ -13,15 +13,15 @@ This C# console application allows a player to play a game similar to hangman, w
 
 Clone this repository to your local machine.
 
-$ git clone https://github.com/cmorto02/LAB04-WordGuessGame.git
+$ git clone https://github.com/cmorto02/LAB03-WordGuessGame.git
 To run the program from Visual Studio:
 Select File -> Open -> Project/Solution
 
 Next navigate to the location you cloned the Repository.
 
-Double click on the LAB04-WordGuessGame directory.
+Double click on the LAB03-WordGuessGame directory.
 
-Then select and open LAB04-WordGuessGame.sln
+Then select and open LAB03-WordGuessGame.sln
 
 ### Visuals
 
